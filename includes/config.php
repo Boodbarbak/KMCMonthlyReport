@@ -2,8 +2,8 @@
 // KMC Monthly Financial Report Script configuration file
 
 // *** CSV files details ***
-$GLOBALS['config']['csv']['path'] = '';
-$GLOBALS['config']['csv']['url'] = '';
+$GLOBALS['config']['csv']['path'] = 'reports/';
+$GLOBALS['config']['csv']['url'] = 'reports/';
 $GLOBALS['config']['csv']['delimiter'] = ',';
 $GLOBALS['config']['csv']['enclosure'] = '"';
 $GLOBALS['config']['csv']['escapeChar'] = '\\';

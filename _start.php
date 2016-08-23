@@ -7,6 +7,9 @@ include 'includes/classes/odoo_account_periods.class.php';
 include 'includes/classes/odoo_account_period.class.php';
 include 'includes/classes/odoo_product_categories.class.php';
 include 'includes/classes/odoo_product_category.class.php';
+include 'includes/classes/odoo_pos_products_sales.class.php';
+include 'includes/classes/odoo_product.class.php';
+include 'includes/classes/odoo_product_sales.class.php';
 
 // Connect to DB
 try {

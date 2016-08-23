@@ -2,13 +2,19 @@
 // Start the system
 include '_start.php';
 
-// TODO Check dates set from GET params
+// TODO Check period and dates set from GET params
+$periods = array($_GET['period']);
 
 // Get Categories
 $categoriesObj = new odoo_product_categories($GLOBALS['odooDb']);
 $categories = $categoriesObj->categories;
 
+$productsSales = array();
+
 // TODO Get POS sales
+$posSales = new odoo_pos_products_sales($GLOBALS['odooDb'], $periods, $productsSales);
+$productsSales = $posSales->productsSales;
+var_dump($productsSales);
 
 // TODO Get customers invoices based on invoice date
 
