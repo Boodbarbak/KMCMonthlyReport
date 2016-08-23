@@ -2,11 +2,11 @@
 // KMC Monthly Financial Report Script configuration file
 
 // *** CSV files details ***
-$_GLOBAL['config']['csv']['path'] = '';
-$_GLOBAL['config']['csv']['url'] = '';
-$_GLOBAL['config']['csv']['delimiter'] = ',';
-$_GLOBAL['config']['csv']['enclosure'] = '"';
-$_GLOBAL['config']['csv']['escapeChar'] = '\\';
+$GLOBALS['config']['csv']['path'] = '';
+$GLOBALS['config']['csv']['url'] = '';
+$GLOBALS['config']['csv']['delimiter'] = ',';
+$GLOBALS['config']['csv']['enclosure'] = '"';
+$GLOBALS['config']['csv']['escapeChar'] = '\\';
 
 
 // *** Database details ***
@@ -28,15 +28,18 @@ $devDb = array(
 	'password'	=>	'cmk',	
 	);
 
-$_GLOBAL['config']['odooDb'] = $prodDb;
-$_GLOBAL['config']['odooDb'] = $devDb;	// comment this line to use production database
+$GLOBALS['config']['odooDb'] = $prodDb;
+$GLOBALS['config']['odooDb'] = $devDb;	// comment this line to use production database
 
-$_GLOBAL['config']['odooDb']['dsn'] = 'pgsql:dbname='.$_GLOBAL['config']['odooDb']['db'].';'
-	.'host='.$_GLOBAL['config']['odooDb']['ip'].';'
-	.'port='.$_GLOBAL['config']['odooDb']['port'].';'
+$GLOBALS['config']['odooDb']['dsn'] = 'pgsql:dbname='.$GLOBALS['config']['odooDb']['db'].';'
+	.'host='.$GLOBALS['config']['odooDb']['ip'].';'
+	.'port='.$GLOBALS['config']['odooDb']['port'].';'
 	;
 
 // *** KMC Monthly Financial Report configuration ***
+// Odoo Companies Id
+$GLOBALS['config']['odoo']['companies'] = array(1,3);	// 1 = CMKFR/TharpaFR; 3 = IRCB
+
 // Show products of the following categories
 
 // Hide children (categories AND products) of the following categories

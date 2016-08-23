@@ -1,28 +1,11 @@
 <?php
-// Load config
-include 'includes/config.php';
-include 'includes/classes/odoo_product_categories.class.php';
-include 'includes/classes/odoo_product_category.class.php';
-
-// Load libs
+// Start the system
+include '_start.php';
 
 // TODO Check dates set from GET params
 
-// TODO Connect to DB
-try {
-	$_GLOBAL['odooDb'] = new PDO(
-		$_GLOBAL['config']['odooDb']['dsn'],
-		$_GLOBAL['config']['odooDb']['user'],
-		$_GLOBAL['config']['odooDb']['password']
-		);
-}
-catch(PDOException $e) {
-	echo 'Connection to OdooDb failed: '.$e->getMessage();
-	exit;
-}
-
 // Get Categories
-$categoriesObj = new odoo_product_categories($_GLOBAL['odooDb']);
+$categoriesObj = new odoo_product_categories($GLOBALS['odooDb']);
 $categories = $categoriesObj->categories;
 
 // TODO Get POS sales
@@ -40,7 +23,7 @@ $categories = $categoriesObj->categories;
 // TODO Get debits and credits for each accounting category
 
 // Close DB connection
-$_GLOBAL['odooDb'] = NULL;
+$GLOBALS['odooDb'] = NULL;
 
 // TODO Compute the total of each category (adding total of each sub-categories, beginning with the highest leveled categories)
 

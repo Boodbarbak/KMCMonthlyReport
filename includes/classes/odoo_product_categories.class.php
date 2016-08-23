@@ -27,7 +27,6 @@ class odoo_product_categories{
 			ORDER BY node.parent_left
 			';
 		foreach($this->db->query($sql) as $row){
-			echo $row['name']."<br>\r\n";
 			$category = new odoo_product_category($this, $row);
 			$this->categories[] = $category;
 			$this->categoriesById[$category->id] = $category;

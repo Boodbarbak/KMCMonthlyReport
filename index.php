@@ -1,3 +1,9 @@
+<?php
+// Start the system
+include '_start.php';
+// Get the periods
+$periods = new odoo_account_periods($GLOBALS['odooDb']);
+?>
 <html>
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
@@ -21,7 +27,15 @@
 		<p>
 		</p>
 		<form target="_self" autocomplete="off" method="GET" action="process.php">
-			<table>
+			<select name="period">
+				<option value="">Choisir une période</option>
+				<?php
+				foreach($periods->periodsByCompany[$GLOBALS['config']['odoo']['companies'][0]] as $period){
+					echo '<option value="'.$period->id.'">'.htmlspecialchars($period->name).'</option>'."\n";
+				}
+				?>
+			</select>
+			<!--table>
 				<tbody>
 					<tr>
 						<td>Date début</td>
@@ -33,8 +47,8 @@
 						<td> <input maxlength="12" size="10" value="" name="odate" id="odate" type="text"></td>
 					</tr>
 				</tbody>
-			</table>
-			<input name="send" type="submit" value="Rechercher">
+			</table-->
+			<input name="send" type="submit" value="Générer le rapport">
 		</form>
 	</div>
 	<span></span>
