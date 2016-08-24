@@ -2,13 +2,16 @@
 class odoo_product_sales{
 	private $productsSales;
 	
-	public $product;
-	public $quantity;
-	public $totalWTaxes;
-	public $totalWOTaxes;
+	public $rows=array();
+	
+	public $product;		// Details of the product as an odoo_product object
+	public $quantity;		// Quantity sold
+	public $totalWTaxes;	// Total amount of sales with taxes
+	public $totalWOTaxes;	// Total amount of sales without taxes
 	
 	public function __construct($productsSales, array $row=array()){
 		$this->productsSales = $productsSales;
+		$this->rows[] = $row;
 		
 		if(count($row)){
 			$this->quantity = $row['qty_total'];
@@ -19,14 +22,9 @@ class odoo_product_sales{
 				$this->product = new odoo_product($row);
 			}
 			
-			if(!isset($this->productsSales->productsSales[$this->product->id])){
-				$this->productsSales->productsSales[$this->product->id] = $this;
-			}
-			else{
-				$this->productsSales->productsSales[$this->product->id]->quantity += $this->quantity;
-				$this->productsSales->productsSales[$this->product->id]->totalWTaxes += $this->totalWTaxes;
-				$this->productsSales->productsSales[$this->product->id]->totalWOTaxes += $this->totalWOTaxes;
-			}
+			$this->productsSales->addProductSales($this);
+			
+			$this->productsSales->productCategories->categoriesById[$this->product->categoryId]->addProductSales($this);
 		}
 	}
 }

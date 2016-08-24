@@ -3,6 +3,7 @@
 include 'includes/config.php';
 
 // Load libs
+include 'includes/functions.php';
 include 'includes/classes/odoo_account_periods.class.php';
 include 'includes/classes/odoo_account_period.class.php';
 include 'includes/classes/odoo_product_categories.class.php';

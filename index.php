@@ -53,4 +53,6 @@ $periods = new odoo_account_periods($GLOBALS['odooDb']);
 	</div>
 	<span></span>
 </body>
-</html>
+</html><?php
+include '_end.php';
+?>
