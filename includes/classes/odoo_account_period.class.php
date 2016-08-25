@@ -1,6 +1,6 @@
 <?php
 class odoo_account_period{
-	private $periods;
+	protected $periods;
 	
 	public $id;
 	public $code;

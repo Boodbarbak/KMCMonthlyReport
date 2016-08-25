@@ -1,7 +1,6 @@
 <?php
 class odoo_product_categories{
-	
-	private $db;	// PDO object
+	protected $db;	// PDO object
 	
 	public $categories;
 	public $categoriesById;
