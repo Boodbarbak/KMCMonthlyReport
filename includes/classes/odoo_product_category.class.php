@@ -16,12 +16,16 @@ class odoo_product_category{
 	
 	public $sales;		// Total sales in the category
 	public $purchases;	// Total purchases in the category
+	public $salesByPayment;		// Total sales based on payment period in the category
+	public $purchasesByPayment;	// Total purchases based on payment period in the category
 	
 	public function __construct(odoo_product_categories $categories, array $row=array()){
 		$this->categories = $categories;
 		$this->products = array();
 		$this->sales = new odoo_product_sales();
 		$this->purchases = new odoo_product_sales();
+		$this->salesByPayment = new odoo_product_sales();
+		$this->purchasesByPayment = new odoo_product_sales();
 		
 		if(count($row)){
 			$this->id = $row['id'];
@@ -50,12 +54,24 @@ class odoo_product_category{
 			$this->products[$product->id] = $product;
 		}
 		
-		$this->sales->quantity += $product->sales->quantity;
-		$this->sales->totalWOTaxes += $product->sales->totalWOTaxes;
-		$this->sales->totalWTaxes += $product->sales->totalWTaxes;
+		$this->add($product);
+	}
+
+	public function add($object){
+		$this->sales->quantity += $object->sales->quantity;
+		$this->sales->totalWOTaxes += $object->sales->totalWOTaxes;
+		$this->sales->totalWTaxes += $object->sales->totalWTaxes;
 		
-		$this->purchases->quantity += $product->purchases->quantity;
-		$this->purchases->totalWOTaxes += $product->purchases->totalWOTaxes;
-		$this->purchases->totalWTaxes += $product->purchases->totalWTaxes;
+		$this->purchases->quantity += $object->purchases->quantity;
+		$this->purchases->totalWOTaxes += $object->purchases->totalWOTaxes;
+		$this->purchases->totalWTaxes += $object->purchases->totalWTaxes;
+		
+		$this->salesByPayment->quantity += $object->salesByPayment->quantity;
+		$this->salesByPayment->totalWTaxes += $object->salesByPayment->totalWTaxes;
+		$this->salesByPayment->totalWOTaxes += $object->salesByPayment->totalWOTaxes;
+		
+		$this->purchasesByPayment->quantity += $object->purchasesByPayment->quantity;
+		$this->purchasesByPayment->totalWTaxes += $object->purchasesByPayment->totalWTaxes;
+		$this->purchasesByPayment->totalWOTaxes += $object->purchasesByPayment->totalWOTaxes;
 	}
 }

@@ -3,19 +3,22 @@ class odoo_pos_products_sales{
 	protected $db;
 	
 	public $periods;
-	public $productsSales;
-	public $productsSalesById;
+	public $products;
 	public $productCategories;
 	
 	public $sales;		// Total sales
 	public $purchases;	// Total purchases
+	public $salesByPayment;		// Total sales based on payment period
+	public $purchasesByPayment;	// Total purchases based on payment period
 
 	public function __construct($db, $productCategories, array $periods=array(), array $productsSales=array()){
 		$this->db = $db;
 		$this->sales = new odoo_product_sales();
 		$this->purchases = new odoo_product_sales();
+		$this->salesByPayment = new odoo_product_sales();
+		$this->purchasesByPayment = new odoo_product_sales();
 				
-		$this->productsSales = $this->productsSalesById = $productsSales;
+		$this->products = $productsSales;
 		$this->productCategories = $productCategories;
 		
 		if(count($periods))
@@ -60,23 +63,27 @@ class odoo_pos_products_sales{
 		}
 		else{	// If the product does already exist in the sales list
 			// Add the sales and purchases quantities and amounts to the existing product in the list
-			$sales = $this->products[$product->id]->sales;
-			$sales->quantity += $product->sales->quantity;
-			$sales->totalWTaxes += $product->sales->totalWTaxes;
-			$sales->totalWOTaxes += $product->sales->totalWOTaxes;
-			
-			$purchases = $this->products[$product->id]->purchases;
-			$purchases->quantity += $product->purchases->quantity;
-			$purchases->totalWTaxes += $product->purchases->totalWTaxes;
-			$purchases->totalWOTaxes += $product->purchases->totalWOTaxes;
+			$this->products[$product->id]->add($product);
 		}
 		
-		$this->sales->quantity += $product->sales->quantity;
-		$this->sales->totalWOTaxes += $product->sales->totalWOTaxes;
-		$this->sales->totalWTaxes += $product->sales->totalWTaxes;
+		$this->add($product);
+	}
+	
+	public function add($object){
+		$this->sales->quantity += $object->sales->quantity;
+		$this->sales->totalWOTaxes += $object->sales->totalWOTaxes;
+		$this->sales->totalWTaxes += $object->sales->totalWTaxes;
 		
-		$this->purchases->quantity += $product->purchases->quantity;
-		$this->purchases->totalWOTaxes += $product->purchases->totalWOTaxes;
-		$this->purchases->totalWTaxes += $product->purchases->totalWTaxes;
+		$this->purchases->quantity += $object->purchases->quantity;
+		$this->purchases->totalWOTaxes += $object->purchases->totalWOTaxes;
+		$this->purchases->totalWTaxes += $object->purchases->totalWTaxes;
+		
+		$this->salesByPayment->quantity += $object->salesByPayment->quantity;
+		$this->salesByPayment->totalWTaxes += $object->salesByPayment->totalWTaxes;
+		$this->salesByPayment->totalWOTaxes += $object->salesByPayment->totalWOTaxes;
+		
+		$this->purchasesByPayment->quantity += $object->purchasesByPayment->quantity;
+		$this->purchasesByPayment->totalWTaxes += $object->purchasesByPayment->totalWTaxes;
+		$this->purchasesByPayment->totalWOTaxes += $object->purchasesByPayment->totalWOTaxes;
 	}
 }
