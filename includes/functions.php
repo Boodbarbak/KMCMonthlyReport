@@ -22,11 +22,12 @@ function printReport($categories){
 				<td>Quantity</td>
 				<td>Total without Taxes</td>
 				<td>Total with Taxes</td>
+				<td>Balance</td>
 			</tr>
 	<?php
 	$totalQt = $totalWOTaxes = $totalWTaxes = 0;
 	foreach($categories as $cat){
-		echo '<tr><td>'.$cat->id.' '.$cat->fullpath.' /</td><td align=right>'.(int)$cat->sales->quantity.'</td><td align=right>'.formatCurrency($cat->sales->totalWOTaxes).'</td><td align=right>'.formatCurrency($cat->sales->totalWTaxes).'</td><td align=right>'.(int)$cat->purchases->quantity.'</td><td align=right>'.formatCurrency($cat->purchases->totalWOTaxes*-1).'</td><td align=right>'.formatCurrency($cat->purchases->totalWTaxes*-1)."</td></tr>\r\n";
+		echo '<tr><td>'.$cat->id.' '.$cat->fullpath.' /</td><td align=right>'.(int)$cat->sales->quantity.'</td><td align=right>'.formatCurrency($cat->sales->totalWOTaxes).'</td><td align=right>'.formatCurrency($cat->sales->totalWTaxes).'</td><td align=right>'.(int)$cat->purchases->quantity.'</td><td align=right>'.formatCurrency($cat->purchases->totalWOTaxes*-1).'</td><td align=right>'.formatCurrency($cat->purchases->totalWTaxes*-1).'</td><td align=right>'.formatCurrency($cat->sales->totalWOTaxes-$cat->purchases->totalWOTaxes)."</td></tr>\r\n";
 		
 		$sales->quantity += $cat->sales->quantity;
 		$sales->totalWOTaxes += $cat->sales->totalWOTaxes;
@@ -37,7 +38,7 @@ function printReport($categories){
 		$purchases->totalWTaxes += $cat->purchases->totalWTaxes;
 		
 		foreach($cat->products as $prod){
-			echo '<tr><td>'.$cat->fullpath.' / '.$prod->id.' '.$prod->name.'</td><td align=right>'.(int)$prod->sales->quantity.'</td><td align=right>'.formatCurrency($prod->sales->totalWOTaxes).'</td><td align=right>'.formatCurrency($prod->sales->totalWTaxes).'</td><td align=right>'.(int)$prod->purchases->quantity.'</td><td align=right>'.formatCurrency($prod->purchases->totalWOTaxes*-1).'</td><td align=right>'.formatCurrency($prod->purchases->totalWTaxes*-1)."</td></tr>\r\n";
+			echo '<tr><td>'.$cat->fullpath.' / '.$prod->id.' '.$prod->name.'</td><td align=right>'.(int)$prod->sales->quantity.'</td><td align=right>'.formatCurrency($prod->sales->totalWOTaxes).'</td><td align=right>'.formatCurrency($prod->sales->totalWTaxes).'</td><td align=right>'.(int)$prod->purchases->quantity.'</td><td align=right>'.formatCurrency($prod->purchases->totalWOTaxes*-1).'</td><td align=right>'.formatCurrency($prod->purchases->totalWTaxes*-1).'</td><td align=right>'.formatCurrency($prod->sales->totalWOTaxes-$prod->purchases->totalWOTaxes)."</td></tr>\r\n";
 		}
 	}
 	?>
@@ -49,6 +50,7 @@ function printReport($categories){
 			<td align=right><?=number_format($purchases->quantity) ?></td>
 			<td align=right><?=formatCurrency($purchases->totalWOTaxes*-1) ?></td>
 			<td align=right><?=formatCurrency($purchases->totalWTaxes*-1) ?></td>
+			<td align=right><?=formatCurrency($sales->totalWOTaxes-$purchases->totalWOTaxes) ?></td>
 		</tr>
 		</tbody>
 	</table>
