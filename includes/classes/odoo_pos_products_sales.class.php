@@ -47,9 +47,17 @@ class odoo_pos_products_sales{
 		
 		foreach($this->db->query($sql) as $row){
 			$obj = new odoo_product($row);
+			// On POS, payments are always at the same period.
+			// So, adds sales to by payments sales
+			$obj->salesByPayment->quantity = $obj->sales->quantity;
+			$obj->salesByPayment->totalWTaxes = $obj->sales->totalWTaxes;
+			$obj->salesByPayment->totalWOTaxes = $obj->sales->totalWOTaxes;
 			
-			$this->addProductSales($obj);
+			// It is not possible to have purchases in POS. So no need to do the same with purchases.
 			
+			$this->addProductSales($obj);	// Adds the sales of the product to the products list
+			
+			// Add the sales of the products to its category
 			$this->productCategories->categoriesById[$obj->categoryId]->addProductSales($obj);
 		}
 	}

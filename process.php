@@ -21,8 +21,6 @@ $invoiceSales = new odoo_invoices_products($GLOBALS['odooDb'], $categoriesObj, $
 $productsSales = $invoiceSales->products;
 
 // Get customers and suppliers invoices based on payment period
-// TODO Add POS sales to By Payment incomes
-// TODO Check result
 $invoiceSalesByPeriod = new odoo_invoices_products($GLOBALS['odooDb'], $categoriesObj, $periods, $productsSales, true);
 $productsSales = $invoiceSales->products;
 
