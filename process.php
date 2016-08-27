@@ -27,7 +27,21 @@ $productsSales = $invoiceSales->products;
 
 // TODO Get Analytic for specified categories
 
-// TODO Get debits and credits for each accounting category
+// Get debits and credits for each accounting category
+$categoriesByAccount = array();
+// Adding the accounting categories to the categories list
+foreach($GLOBALS['config']['odoo']['accountCategories'] as $data){
+	$cat = new odoo_account_category($categories, $categoriesByAccount, $data);
+	$categories = $cat->categories;
+	$categoriesByAccount = $cat->categoriesByAccount;
+}
+// Fetching the total amount for each account
+$accountsFetcher = new odoo_account_account($GLOBALS['odooDb']);
+$accountsTotals = $accountsFetcher->getAccountsTotal(array_keys($categoriesByAccount), $periods);
+// Adding the total amount to the appropriate category
+foreach($accountsTotals as $account=>$data){
+	$categoriesByAccount[$account]->add($data['quantity'], $data['total']);
+}
 
 // Close DB connection
 $GLOBALS['odooDb'] = NULL;

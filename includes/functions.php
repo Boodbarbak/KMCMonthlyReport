@@ -71,11 +71,13 @@ function printReport($categories){
 		$purchasesByPayment->totalWOTaxes += $cat->purchasesByPayment->totalWOTaxes;
 		$purchasesByPayment->totalWTaxes += $cat->purchasesByPayment->totalWTaxes;
 		
-		foreach($cat->products as $prod){
-			echo '<tr>';
-			echo '<td>(...) / '.' '.$prod->name.'</td>';
-			printSalesNPurchasesCells($prod);
-			echo "</tr>\r\n";
+		if(isset($cat->products)){
+			foreach($cat->products as $prod){
+				echo '<tr>';
+				echo '<td>(...) / '.' '.$prod->name.'</td>';
+				printSalesNPurchasesCells($prod);
+				echo "</tr>\r\n";
+			}
 		}
 	}
 	?>

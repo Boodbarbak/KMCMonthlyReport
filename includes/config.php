@@ -40,6 +40,30 @@ $GLOBALS['config']['odooDb']['dsn'] = 'pgsql:dbname='.$GLOBALS['config']['odooDb
 // Odoo Companies Id
 $GLOBALS['config']['odoo']['companies'] = array(1,3);	// 1 = CMKFR/TharpaFR; 3 = IRCB
 
+// Departments computed from accounting
+$accountCats = array();
+$accountCats[] = array(
+	'name'		=> 'Taxes',
+	'type'		=> 'in',	// 'in' is for expenditure, 'out' for incomes
+	'children'	=> array(
+		array('name'=>'General taxes', 'account' => '637200', 'type' => 'in'),
+//		array('name'=>'Taxe de séjour', 'account' => '637200', 'type' => 'in'),	// FIXME Same account as 'General taxes' !?
+		array('name'=>'Côtisation Foncière', 'account' => '635110', 'type' => 'in'),
+		array('name'=>'Taxes Foncières', 'account' => '635120', 'type' => 'in'),
+		array('name'=>'Impôt sur les Sociétés', 'account' => '635100', 'type' => 'in'),
+	),
+);
+$accountCats[] = array(
+	'name'		=> 'Sponsorship',
+	'type'		=> 'in',	// 'in' is for expenditure, 'out' for incomes
+	'children'	=> array(
+		array('name'=>'Monthly Stipends', 'account' => array('641000', '641100'), 'type' => 'in'),
+		array('name'=>'URSSAF', 'account' => '645100', 'type' => 'in'),
+	),
+);
+// TODO Exclude Tharpa Sponsorship and include it in another category (use analytic?)
+$GLOBALS['config']['odoo']['accountCategories'] = $accountCats;
+
 // Show products of the following categories
 
 // Hide children (categories AND products) of the following categories
@@ -51,6 +75,4 @@ $GLOBALS['config']['odoo']['companies'] = array(1,3);	// 1 = CMKFR/TharpaFR; 3 =
 // Incomes bank account
 
 // Expenditures bank account
-
-// Departments computed from accounting
 
