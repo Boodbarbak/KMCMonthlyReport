@@ -116,9 +116,9 @@ function printSalesNPurchasesCells($obj){
 }
 
 function printSalesCells($obj){
-		echo '<td align=right>'.(int)$obj->quantity.'</td><td align=right>'.formatCurrency($obj->totalWOTaxes).'</td><td align=right>'.formatCurrency($obj->totalWTaxes).'</td>';
+		echo '<td align=right>'.number_format($obj->quantity,2).'</td><td align=right>'.formatCurrency($obj->totalWOTaxes).'</td><td align=right>'.formatCurrency($obj->totalWTaxes).'</td>';
 }
 
 function printPurchasesCells($obj){
-		echo '<td align=right>'.(int)$obj->quantity.'</td><td align=right>'.formatCurrency($obj->totalWOTaxes*-1).'</td><td align=right>'.formatCurrency($obj->totalWTaxes*-1).'</td>';
+		echo '<td align=right>'.number_format($obj->quantity,2).'</td><td align=right>'.formatCurrency($obj->totalWOTaxes*-1).'</td><td align=right>'.formatCurrency($obj->totalWTaxes*-1).'</td>';
 }
