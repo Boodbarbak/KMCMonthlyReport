@@ -4,6 +4,7 @@ class odoo_product_categories{
 	
 	public $categories;
 	public $categoriesById;
+	public $categoriesByLevel;
 	
 	public function __construct($db){
 		$this->db = $db;
@@ -15,6 +16,7 @@ class odoo_product_categories{
 	
 		$this->categories = array();
 		$this->categoriesById = array();
+		$this->categoriesByLevel = array();
 	
 		$sql = 'SELECT node.* 
 			FROM 
@@ -29,6 +31,9 @@ class odoo_product_categories{
 			$category = new odoo_product_category($this, $row);
 			$this->categories[] = $category;
 			$this->categoriesById[$category->id] = $category;
+			if(!isset($this->categoriesByLevel[$category->level]))
+				$this->categoriesByLevel[$category->level] = array();
+			$this->categoriesByLevel[$category->level][] = $category;
 		}
 	}
 }

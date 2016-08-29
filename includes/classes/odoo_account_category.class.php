@@ -2,6 +2,7 @@
 class odoo_account_category{
 	public $categories;
 	public $categoriesByAccount;
+	public $categoriesByLevel;
 	
 	public $id;			// Id of the products category to merge with
 	public $name;
@@ -21,7 +22,7 @@ class odoo_account_category{
 	public $salesByPayment;		// Total sales based on payment period in the category
 	public $purchasesByPayment;	// Total purchases based on payment period in the category
 	
-	public function __construct(array $categories, array $categoriesByAccount, array $categoriesById, array $obj=array()){
+	public function __construct(array $categories, array $categoriesByAccount, array $categoriesById, array $categoriesByLevel, array $obj=array()){
 		$this->sales = new odoo_product_sales();
 		$this->purchases = new odoo_product_sales();
 		$this->salesByPayment = new odoo_product_sales();
@@ -29,6 +30,7 @@ class odoo_account_category{
 		
 		$this->categories = $categories;
 		$this->categoriesByAccount = $categoriesByAccount;
+		$this->categoriesByLevel = $categoriesByLevel;
 		
 		$this->name = $obj['name'];
 		if(isset($obj['parent'])){
@@ -37,6 +39,10 @@ class odoo_account_category{
 			$this->path = $this->parent->fullpath.' / ';
 		}
 		$this->fullpath = $this->path.$this->name;
+		
+		if(!isset($this->categoriesByLevel[$this->level]))
+			$this->categoriesByLevel[$this->level] = array();
+		$this->categoriesByLevel[$this->level][] = $this;
 		
 		$this->type = $obj['type'];
 		
@@ -60,36 +66,59 @@ class odoo_account_category{
 		
 		if(isset($obj['children']) && is_array($obj['children'])){
 			foreach($obj['children'] as $child){
-				$child['parent'] = $this;
-				$cat = new odoo_account_category($this->categories, $this->categoriesByAccount, $categoriesById, $child);
+				if(!$this->id)
+					$child['parent'] = $this;
+				else
+					$child['parent'] = $categoriesById[$this->id];
+				$cat = new odoo_account_category($this->categories, $this->categoriesByAccount, $categoriesById, $this->categoriesByLevel, $child);
 				$this->categories = $cat->categories;
 				$this->categoriesByAccount = $cat->categoriesByAccount;
+				$this->categoriesByLevel = $cat->categoriesByLevel;
 			}
 		}
 	}
 	
-	public function add($quantity, $amount, $type=null){
-		if($type === null)
+	public function add($data){
+		if(is_array($data)){
+			$quantity = $data['quantity'];
+			$amount = $data['total'];
 			$type = $this->type;
 			
-		if($type == 'in'){
-			$this->purchases->quantity += $quantity;
-			$this->purchases->totalWTaxes += $amount;
-			$this->purchases->totalWOTaxes += $amount;
-			$this->purchasesByPayment->quantity += $quantity;
-			$this->purchasesByPayment->totalWTaxes += $amount;
-			$this->purchasesByPayment->totalWOTaxes += $amount;
+			if($type == 'in'){
+				$this->purchases->quantity += $quantity;
+				$this->purchases->totalWTaxes += $amount;
+				$this->purchases->totalWOTaxes += $amount;
+				$this->purchasesByPayment->quantity += $quantity;
+				$this->purchasesByPayment->totalWTaxes += $amount;
+				$this->purchasesByPayment->totalWOTaxes += $amount;
+			}
+			else{
+				$this->sales->quantity += $quantity;
+				$this->sales->totalWTaxes += $amount;
+				$this->sales->totalWOTaxes += $amount;
+				$this->salesByPayment->quantity += $quantity;
+				$this->salesByPayment->totalWTaxes += $amount;
+				$this->salesByPayment->totalWOTaxes += $amount;
+			}
 		}
 		else{
-			$this->sales->quantity += $quantity;
-			$this->sales->totalWTaxes += $amount;
-			$this->sales->totalWOTaxes += $amount;
-			$this->salesByPayment->quantity += $quantity;
-			$this->salesByPayment->totalWTaxes += $amount;
-			$this->salesByPayment->totalWOTaxes += $amount;
-		}
+			$object = $data;
+			
+			$this->sales->quantity += $object->sales->quantity;
+			$this->sales->totalWOTaxes += $object->sales->totalWOTaxes;
+			$this->sales->totalWTaxes += $object->sales->totalWTaxes;
 		
-		if(isset($this->parent))
-			$this->parent->add($quantity, $amount, $type);
+			$this->purchases->quantity += $object->purchases->quantity;
+			$this->purchases->totalWOTaxes += $object->purchases->totalWOTaxes;
+			$this->purchases->totalWTaxes += $object->purchases->totalWTaxes;
+		
+			$this->salesByPayment->quantity += $object->salesByPayment->quantity;
+			$this->salesByPayment->totalWTaxes += $object->salesByPayment->totalWTaxes;
+			$this->salesByPayment->totalWOTaxes += $object->salesByPayment->totalWOTaxes;
+		
+			$this->purchasesByPayment->quantity += $object->purchasesByPayment->quantity;
+			$this->purchasesByPayment->totalWTaxes += $object->purchasesByPayment->totalWTaxes;
+			$this->purchasesByPayment->totalWOTaxes += $object->purchasesByPayment->totalWOTaxes;
+		}
 	}
 }

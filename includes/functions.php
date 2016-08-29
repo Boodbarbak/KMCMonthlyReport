@@ -55,21 +55,23 @@ function printReport($categories){
 		printSalesNPurchasesCells($cat);
 		echo "</tr>\r\n";
 		
-		$sales->quantity += $cat->sales->quantity;
-		$sales->totalWOTaxes += $cat->sales->totalWOTaxes;
-		$sales->totalWTaxes += $cat->sales->totalWTaxes;
+		if($cat->level == 0){
+			$sales->quantity += $cat->sales->quantity;
+			$sales->totalWOTaxes += $cat->sales->totalWOTaxes;
+			$sales->totalWTaxes += $cat->sales->totalWTaxes;
 		
-		$purchases->quantity += $cat->purchases->quantity;
-		$purchases->totalWOTaxes += $cat->purchases->totalWOTaxes;
-		$purchases->totalWTaxes += $cat->purchases->totalWTaxes;
+			$purchases->quantity += $cat->purchases->quantity;
+			$purchases->totalWOTaxes += $cat->purchases->totalWOTaxes;
+			$purchases->totalWTaxes += $cat->purchases->totalWTaxes;
 		
-		$salesByPayment->quantity += $cat->salesByPayment->quantity;
-		$salesByPayment->totalWOTaxes += $cat->salesByPayment->totalWOTaxes;
-		$salesByPayment->totalWTaxes += $cat->salesByPayment->totalWTaxes;
+			$salesByPayment->quantity += $cat->salesByPayment->quantity;
+			$salesByPayment->totalWOTaxes += $cat->salesByPayment->totalWOTaxes;
+			$salesByPayment->totalWTaxes += $cat->salesByPayment->totalWTaxes;
 		
-		$purchasesByPayment->quantity += $cat->purchasesByPayment->quantity;
-		$purchasesByPayment->totalWOTaxes += $cat->purchasesByPayment->totalWOTaxes;
-		$purchasesByPayment->totalWTaxes += $cat->purchasesByPayment->totalWTaxes;
+			$purchasesByPayment->quantity += $cat->purchasesByPayment->quantity;
+			$purchasesByPayment->totalWOTaxes += $cat->purchasesByPayment->totalWOTaxes;
+			$purchasesByPayment->totalWTaxes += $cat->purchasesByPayment->totalWTaxes;
+		}
 		
 		if(isset($cat->products)){
 			foreach($cat->products as $prod){
