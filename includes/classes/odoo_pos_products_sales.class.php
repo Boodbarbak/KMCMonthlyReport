@@ -41,7 +41,7 @@ class odoo_pos_products_sales{
 				JOIN product_product AS p ON pol.product_id=p.id
 				JOIN product_template AS pt ON p.product_tmpl_id=pt.id
 			WHERE
-				am.period_id IN ('.implode($this->periods,',').')
+				am.period_id IN ('.implode(',',$this->periods).')
 			GROUP BY pt.id
 		';
 		

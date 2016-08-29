@@ -2,7 +2,7 @@
 // Start the system
 include '_start.php';
 // Get the periods
-$periods = new odoo_account_periods($GLOBALS['odooDb']);
+$periods = new odoo_account_periods($GLOBALS['odooDb'], $GLOBALS['config']['events']);
 ?>
 <html>
 <head>
@@ -14,11 +14,46 @@ $periods = new odoo_account_periods($GLOBALS['odooDb']);
 	<script src="includes/jquery/jquery-2.1.3.min.js" type="text/javascript"></script>
 	<script src="includes/jquery/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="includes/jquery/jquery-ui.interactions.min.js" type="text/javascript"></script>
+	<script src="includes/jquery/datepicker-fr.js" type="text/javascript"></script>
 	<script>
+	<?php
+	if(count($GLOBALS['config']['events']))
+	{
+		echo "var specialEventsDates = new Array();\r\n";
+		foreach($periods->periodsByCompany[$GLOBALS['config']['odoo']['companies'][0]] as $index=>$period){
+			if(isset($GLOBALS['config']['events'][$period->name])){
+				$dates = $GLOBALS['config']['events'][$period->name];
+				$parts = explode('-',$dates[0]);
+				$startDate = $parts[2].'/'.$parts[1].'/'.$parts[0];
+				$parts = explode('-',$dates[1]);
+				$endDate = $parts[2].'/'.$parts[1].'/'.$parts[0];
+			}
+			else{
+				$startDate = $endDate = '';
+			}
+			echo 'specialEventsDates['.$index.'] = {start: "'.$startDate.'", end: "'.$endDate.'"};'."\r\n";
+		}
+	}
+	?>
 	$(function() {
-			$( "#idate" ).datepicker();
-			$( "#odate" ).datepicker();
-			});
+		var datePickerConf = {
+			changeMonth: true,
+			changeYear: true
+		};
+		$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+		$("#idate").datepicker(datePickerConf);
+		$("#odate").datepicker(datePickerConf);
+		$("#periodSelector").change(function(){
+			if(specialEventsDates[this.value] == undefined){
+				$("#idate").val('');
+				$("#odate").val('');
+			}
+			else{
+				$("#idate").val(specialEventsDates[this.value].start);
+				$("#odate").val(specialEventsDates[this.value].end);
+			}
+		})
+	});
 	</script>
 </head>
 <body>
@@ -27,7 +62,11 @@ $periods = new odoo_account_periods($GLOBALS['odooDb']);
 		<p>
 		</p>
 		<form target="_self" autocomplete="off" method="GET" action="process.php">
-			<select name="period">
+			Choisir au moins une entitée :<br>
+			<input type=checkbox name=companies[] value=1 checked> CMK France / Editions Tharpa<br>
+			<input type=checkbox name=companies[] value=3 checked> IRCB<br><br>
+
+			<select name="period" id="periodSelector">
 				<option value="">Choisir une période</option>
 				<?php
 				foreach($periods->periodsByCompany[$GLOBALS['config']['odoo']['companies'][0]] as $index=>$period){
@@ -35,22 +74,8 @@ $periods = new odoo_account_periods($GLOBALS['odooDb']);
 				}
 				?>
 			</select><br><br>
-			Choisir au moins une entitée :<br>
-			<input type=checkbox name=companies[] value=1 checked> CMK France / Editions Tharpa<br>
-			<input type=checkbox name=companies[] value=3 checked> IRCB<br><br>
-			<!--table>
-				<tbody>
-					<tr>
-						<td>Date début</td>
-						<td style="height: 25px;"><input maxlength="12" size="10" value="" name="idate" id="idate" type="text"><br>
-						</td>
-					</tr>
-					<tr>
-						<td>Date de fin</td>
-						<td> <input maxlength="12" size="10" value="" name="odate" id="odate" type="text"></td>
-					</tr>
-				</tbody>
-			</table-->
+
+			Évenement spécial sur la période : du <input maxlength="12" size="10" value="" name="eventStart" id="idate" type="text">(inclus) au <input maxlength="12" size="10" value="" name="eventEnd" id="odate" type="text">(inclus)<br><br>
 			<input type="submit" value="Générer le rapport">
 		</form>
 	</div>

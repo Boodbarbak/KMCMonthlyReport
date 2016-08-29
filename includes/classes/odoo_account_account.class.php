@@ -15,8 +15,8 @@ class odoo_account_account{
 				account_move_line AS ml
 				JOIN account_account AS a ON a.id = ml.account_id
 			WHERE
-				ml.period_id IN ('.implode($periods, ',').')
-				AND a.code IN (\''.implode($accounts, '\',\'').'\')
+				ml.period_id IN ('.implode(',',$periods).')
+				AND a.code IN (\''.implode('\',\'',$accounts).'\')
 			GROUP BY a.code
 		';
 		

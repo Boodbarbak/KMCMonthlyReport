@@ -43,11 +43,11 @@ class odoo_invoices_products extends odoo_pos_products_sales{
 				i.state != \'draft\'';
 		if($this->byPaymentPeriod){
 			$sql .= '
-				AND payment.period_id IN ('.implode($this->periods,',').')';
+				AND payment.period_id IN ('.implode(',',$this->periods).')';
 		}
 		else{
 			$sql .= '
-				AND i.period_id IN ('.implode($this->periods,',').')';
+				AND i.period_id IN ('.implode(',',$this->periods).')';
 		}
 		$sql .= '
 			GROUP BY pt.id, i.type, t.amount';

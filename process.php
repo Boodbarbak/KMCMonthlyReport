@@ -58,6 +58,16 @@ $posSales = new odoo_pos_products_sales($GLOBALS['odooDb'], $categoriesObj, $per
 $productsSales = $posSales->products;
 // *** /POS sales ***
 
+// *** Special events ***
+// If there is a special event in this period
+if(isset($_GET['eventStart']) && isset($_GET['eventEnd']) && strlen($_GET['eventStart'])==10 &&  strlen($_GET['eventEnd'])==10){
+	// Get POS sales of the shop for the period excluding the event
+	// Replace the categories sales by those sales
+	// Get POS total sales of the shop for the period only for the event
+	// Place it in a new category Events / Shop
+}
+// *** /Special events ***
+
 // *** Customers and suppliers invoices based on invoice period ***
 $invoiceSales = new odoo_invoices_products($GLOBALS['odooDb'], $categoriesObj, $periods, $productsSales);
 $productsSales = $invoiceSales->products;
@@ -103,14 +113,15 @@ foreach($categoriesToMerge as $cat){
 // Close DB connection
 $GLOBALS['odooDb'] = NULL;
 
-// TODO Compute the total of each category (adding total of each sub-categories to its parent category, beginning with the highest leveled categories)
+// Compute the total of each category (adding total of each sub-categories to its parent category, beginning with the highest leveled categories)
 for($i=count($categoriesObj->categoriesByLevel)-1; $i>0; $i--){
 	foreach($categoriesObj->categoriesByLevel[$i] as $cat){
 		$cat->parent->add($cat);
 	}
 }
 
-printReport($categories);
+// Show report
+printReport($periodsFetcher->periods[$_GET['period']]->name, $categories);
 
 // TODO Generate csv file
 

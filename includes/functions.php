@@ -3,7 +3,7 @@ function formatCurrency($amount){
 	return number_format($amount, 2);
 }
 
-function printReport($categories){
+function printReport($periodName, $categories){
 	$sales = new odoo_product_sales();
 	$purchases = new odoo_product_sales();
 	$salesByPayment = new odoo_product_sales();
@@ -12,7 +12,7 @@ function printReport($categories){
 	<table class="datatable">
 		<thead>
 			<tr>
-				<td></td>
+				<td><?=$periodName?></td>
 				<td colspan=7 align=center style="font-weight:bold;">Based on invoices</td>
 				<td colspan=7 align=center style="font-weight:bold;">Based on payments</td>
 			</tr>

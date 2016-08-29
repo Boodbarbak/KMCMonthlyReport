@@ -77,3 +77,10 @@ $GLOBALS['config']['odoo']['accountCategories'] = $accountCats;
 
 // Expenditures bank account
 
+// Special events
+$events = array();
+$events['03/2016'] = array('2016-03-25', '2016-03-28');
+$GLOBALS['config']['events'] = $events;
+
+$GLOBALS['config']['eventsShopCatId'] = 32;		// Category of the shop, from which exclude the shop sales during special events
+$GLOBALS['config']['eventsEventsCatId'] = 330;	// Category of the special events, in which create a sub-category with total of shop sales during special events
