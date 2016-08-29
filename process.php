@@ -29,11 +29,14 @@ $productsSales = $invoiceSales->products;
 
 // Get debits and credits for each accounting category
 $categoriesByAccount = array();
+$categoriesToMerge = array();
 // Adding the accounting categories to the categories list
 foreach($GLOBALS['config']['odoo']['accountCategories'] as $data){
-	$cat = new odoo_account_category($categories, $categoriesByAccount, $data);
+	$cat = new odoo_account_category($categories, $categoriesByAccount, $categoriesObj->categoriesById, $data);
 	$categories = $cat->categories;
 	$categoriesByAccount = $cat->categoriesByAccount;
+	if($cat->id)
+		$categoriesToMerge[] = $cat;
 }
 // Fetching the total amount for each account
 $accountsFetcher = new odoo_account_account($GLOBALS['odooDb']);
@@ -41,6 +44,12 @@ $accountsTotals = $accountsFetcher->getAccountsTotal(array_keys($categoriesByAcc
 // Adding the total amount to the appropriate category
 foreach($accountsTotals as $account=>$data){
 	$categoriesByAccount[$account]->add($data['quantity'], $data['total']);
+}
+// Merging accounting categories with products categories, if appropriate
+foreach($categoriesToMerge as $cat){
+	// Adding the totals of the accounting category to the products category
+	$categoriesObj->categoriesById[$cat->id]->add($cat);
+	// Moving the accounting category children in the category list so they appear as products category children
 }
 
 // Close DB connection

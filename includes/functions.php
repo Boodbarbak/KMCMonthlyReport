@@ -51,7 +51,7 @@ function printReport($categories){
 	$totalQt = $totalWOTaxes = $totalWTaxes = 0;
 	foreach($categories as $cat){
 		echo '<tr>';
-		echo '<td>'.$cat->fullpath.' /</td>';
+		echo '<td title="'.$cat->id.'">'.$cat->fullpath.' /</td>';
 		printSalesNPurchasesCells($cat);
 		echo "</tr>\r\n";
 		
@@ -74,7 +74,7 @@ function printReport($categories){
 		if(isset($cat->products)){
 			foreach($cat->products as $prod){
 				echo '<tr>';
-				echo '<td>(...) / '.' '.$prod->name.'</td>';
+				echo '<td title="'.$cat->id.' / '.$prod->id.'">(...) / '.' '.$prod->name.'</td>';
 				printSalesNPurchasesCells($prod);
 				echo "</tr>\r\n";
 			}

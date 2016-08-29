@@ -56,6 +56,7 @@ $accountCats[] = array(
 $accountCats[] = array(
 	'name'		=> 'Sponsorship',
 	'type'		=> 'in',	// 'in' is for expenditure, 'out' for incomes
+	'id'		=> 52,		// if it as too be added to an existing products category, id of this products category
 	'children'	=> array(
 		array('name'=>'Monthly Stipends', 'account' => array('641000', '641100'), 'type' => 'in'),
 		array('name'=>'URSSAF', 'account' => '645100', 'type' => 'in'),
