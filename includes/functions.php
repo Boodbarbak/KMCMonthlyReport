@@ -9,8 +9,8 @@ function printReport($categories){
 	$salesByPayment = new odoo_product_sales();
 	$purchasesByPayment = new odoo_product_sales();
 	?>
-	<table>
-		<tbody>
+	<table class="datatable">
+		<thead>
 			<tr>
 				<td></td>
 				<td colspan=7 align=center style="font-weight:bold;">Based on invoices</td>
@@ -23,6 +23,7 @@ function printReport($categories){
 				<td></td>
 				<td colspan=3 align=center style="font-weight:bold;">Incomes</td>
 				<td colspan=3 align=center style="font-weight:bold;">Expenditures</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>Category</td>
@@ -47,6 +48,8 @@ function printReport($categories){
 				
 				<td>Balance</td>
 			</tr>
+		</thead>
+		<tbody>
 	<?php
 	$totalQt = $totalWOTaxes = $totalWTaxes = 0;
 	foreach($categories as $cat){

@@ -30,11 +30,14 @@ $periods = new odoo_account_periods($GLOBALS['odooDb']);
 			<select name="period">
 				<option value="">Choisir une période</option>
 				<?php
-				foreach($periods->periodsByCompany[$GLOBALS['config']['odoo']['companies'][0]] as $period){
-					echo '<option value="'.$period->id.'">'.htmlspecialchars($period->name).'</option>'."\n";
+				foreach($periods->periodsByCompany[$GLOBALS['config']['odoo']['companies'][0]] as $index=>$period){
+					echo '<option value="'.$index.'">'.htmlspecialchars($period->name).'</option>'."\n";
 				}
 				?>
-			</select>
+			</select><br><br>
+			Choisir au moins une entitée :<br>
+			<input type=checkbox name=companies[] value=1 checked> CMK France / Editions Tharpa<br>
+			<input type=checkbox name=companies[] value=3 checked> IRCB<br><br>
 			<!--table>
 				<tbody>
 					<tr>
@@ -48,7 +51,7 @@ $periods = new odoo_account_periods($GLOBALS['odooDb']);
 					</tr>
 				</tbody>
 			</table-->
-			<input name="send" type="submit" value="Générer le rapport">
+			<input type="submit" value="Générer le rapport">
 		</form>
 	</div>
 	<span></span>

@@ -1,10 +1,50 @@
 <?php
+// Goto to index if no period
+if(!isset($_GET['period']) || !(int)$_GET['period'] || !isset($_GET['companies']) || !is_array($_GET['companies'])){
+	header('Location: ./');
+	exit;
+}
+
 // Start the system
 include '_start.php';
-
-// TODO Check period and dates set from GET params
-// TODO Select corresponding period for all companies
-$periods = array($_GET['period']);
+?>
+<html>
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+	<title>CMK - Générateur de Rapport Financié Mensuel</title>
+	<script src="includes/jquery/jquery-2.1.3.min.js" type="text/javascript"></script>
+	<script src="includes/jquery/jquery.floatThead.min.js" type="text/javascript"></script>
+	<script>
+	$(function() {
+		$('table.datatable').floatThead();
+			});
+	</script>
+	<style type=text/css>
+	body, td{
+		font-family: "sans-serif";
+		font-size: 10pt;
+	}
+	table{
+		border-spacing: 0;
+	}
+	table thead{
+		background-color: white;
+	}
+	table td{
+		border: 1px solid grey;
+		border-top:0;
+		border-left:0;
+	}
+	</style>
+</head>
+<body>
+<?php
+// Selecting the corresponding period of each companies
+$periodsFetcher = new odoo_account_periods($GLOBALS['odooDb']);
+$periods = array();
+foreach($_GET['companies'] as $companyId){
+	$periods[] = $periodsFetcher->periodsByCompany[$companyId][$_GET['period']]->id;
+}
 
 // *** Get Categories ***
 $categoriesObj = new odoo_product_categories($GLOBALS['odooDb']);
@@ -77,3 +117,6 @@ printReport($categories);
 // TODO Send csv file
 
 include '_end.php';
+?>
+</body>
+</html>
